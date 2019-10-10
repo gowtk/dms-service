@@ -20,12 +20,10 @@ public final class RepositoryConstants {
 	public static final String GRIDFS_FILE_NAME = "filename";
 	public static final String GRIDFS_FILE_LENGTH = "length";
 
-	public static final String DOCUMENT_S3_NAME = "s3Name";
-	public static final String DOCUMENT_S3_BUCKET = "s3Bucket";
-	public static final String DOCUMENT_MD5SUM_INTERNAL = "md5SumInternal";
-	public static final String DOCUMENT_MD5SUM_EXTERNAL = "md5SumExternal";
-	public static final String DOCUMENT_TEXTRACT_DETECT = "detectingTextResult";
-	public static final String DOCUMENT_TEXTRACT_ANALYSE = "analyzingTextResult";
+	public static final String DOCUMENT_FILE_ID = "fileId";
+	public static final String DOCUMENT_MD5 = "md5";
+	public static final String DOCUMENT_FILE_NO_OF_PAGES = "numberOfPages";
+	public static final String DOCUMENT_TEXTRACT_RESULTS = "textractResults";
 
 	public static final String USER_USERNAME = "username";
 

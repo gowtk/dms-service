@@ -17,6 +17,7 @@ import com.dms.common.utils.CollectionUtils;
 import com.dms.document.domains.DocumentDomain;
 import com.dms.document.domains.UserDomain;
 import com.dms.document.repositories.DocumentRepository;
+import com.dms.document.repositories.FilesRepository;
 import com.dms.document.repositories.UserRepository;
 import com.dms.document.views.FileListView;
 import com.dms.document.views.UserDetailsView;
@@ -29,7 +30,7 @@ import com.dms.web.beans.Toastr;
 @Service
 public class UserService {
 
-	private static final Logger logger = LoggerFactory.getLogger(AwsS3Service.class);
+	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
 	@Autowired
 	private DocumentRepository docsRepo;
@@ -38,10 +39,10 @@ public class UserService {
 	private UserRepository userRepo;
 
 	@Autowired
-	private AwsS3Service s3Service;
+	private FilesRepository filesRepo;
 
 	@Autowired
-	private AwsTextractService textractService;
+	private AwsTextractService textract;
 
 	public Response<UserDetailsView> viewUserDetails(String username) {
 
@@ -60,12 +61,14 @@ public class UserService {
 	public Response<UserDetailsView> uploadFiles(MultipartFile file, String username) {
 		try {
 			if (null != file) {
-				String md5Sum = DigestUtils.md5DigestAsHex(file.getBytes());
-				DocumentDomain document = docsRepo.findByMd5SumInternal(md5Sum);
+				String md5 = DigestUtils.md5DigestAsHex(file.getBytes());
+				DocumentDomain document = docsRepo.findByMd5(md5);
 				if (null == document) {
-					document = createNewDocument(username, md5Sum, file);
-					s3Service.uploadFile(document, file);
-					textractService.parseDocument(username, document.getId());
+					document = createNewDocument(username, md5, file);
+					String fileId = filesRepo.uploadFile(file);
+					document.setFileId(fileId);
+					String docId = docsRepo.saveDocument(document);
+					textract.parseDocument(docId);
 				}
 				updateUserDetails(username, document);
 			}
@@ -95,29 +98,33 @@ public class UserService {
 			documents = new HashSet<>(1);
 			documents.add(document.getId());
 		}
+		user.setDocuments(documents);
 		userRepo.saveUser(user);
 	}
 
-	private DocumentDomain createNewDocument(String user, String md5Sum, MultipartFile file) {
+	private DocumentDomain createNewDocument(String user, String md5, MultipartFile file) {
 		DocumentDomain document = new DocumentDomain();
-		document.setStorage(FileStorageType.AWSS3);
+		document.setStorage(FileStorageType.GRIDFS);
 		document.setFileName(file.getOriginalFilename());
 		document.setContentType(file.getContentType());
 		document.setFileSize(file.getSize());
-		document.setMd5SumInternal(md5Sum);
+		document.setMd5(md5);
 		document.setCreatedBy(user);
-		String id = docsRepo.saveDocument(document);
-		document.setId(id);
 		return document;
 	}
 
 	private ListView<FileListView> prepareFileListView(UserDomain user) {
-		List<DocumentDomain> documents = docsRepo.findDocumentsByIds(user.getDocuments());
-		List<FileListView> listView = new ArrayList<FileListView>(documents.size());
-		for (DocumentDomain document : documents) {
-			listView.add(new FileListView(document));
+		if (CollectionUtils.isValid(user.getDocuments())) {
+			List<DocumentDomain> documents = docsRepo.findDocumentsByIds(user.getDocuments());
+			List<FileListView> listView = new ArrayList<FileListView>(documents.size());
+			for (DocumentDomain document : documents) {
+				listView.add(new FileListView(document));
+			}
+			return new ListView<FileListView>(listView, listView.size(), null, FileListView.uiColumns, FileListView.uiSort);
+		} else {
+			return new ListView<FileListView>(FileListView.uiColumns, FileListView.uiSort);
 		}
-		return new ListView<FileListView>(listView, listView.size(), null, FileListView.uiColumns, FileListView.uiSort);
+
 	}
 
 }

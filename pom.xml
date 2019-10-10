@@ -52,7 +52,6 @@
 		</dependency>
 
 		<!-- Amazon aws dependency -->
-		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-core -->
 		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk-core</artifactId>
@@ -64,27 +63,12 @@
 			<artifactId>aws-java-sdk-textract</artifactId>
 			<version>${com.amazonaws.version}</version>
 		</dependency>
+		
 		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk-s3</artifactId>
-			<version>${com.amazonaws.version}</version>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>2.0.17</version>
 		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-sns -->
-		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk-sns</artifactId>
-			<version>${com.amazonaws.version}</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-sqs -->
-		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk-sqs</artifactId>
-			<version>${com.amazonaws.version}</version>
-		</dependency>
-
-
 
 		<!-- swagger dependency -->
 		<dependency>

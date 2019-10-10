@@ -1,39 +1,37 @@
 package com.dms.document.domains;
 
+import java.util.List;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.amazonaws.services.textract.model.GetDocumentAnalysisRequest;
-import com.amazonaws.services.textract.model.GetDocumentTextDetectionResult;
 import com.dms.common.constants.FileStorageType;
 
 @Document(collection = "document_details")
 public class DocumentDomain extends BaseDomain {
 
+	private String fileId;
 	private String fileName;
 	private Long fileSize;
 	private String contentType;
-	private String s3Name;
-	private String s3Bucket;
 	private FileStorageType storage;
-	private String md5SumInternal;
-	private String md5SumExternal;
-	private GetDocumentTextDetectionResult detectingTextResult;
-	private GetDocumentAnalysisRequest analyzingTextResult;
+	private String md5;
+	private Integer numberOfPages;
+	private List<TextractResults> textractResults;
 
-	public GetDocumentTextDetectionResult getDetectingTextResult() {
-		return detectingTextResult;
+	public Integer getNumberOfPages() {
+		return numberOfPages;
 	}
 
-	public void setDetectingTextResult(GetDocumentTextDetectionResult detectingTextResult) {
-		this.detectingTextResult = detectingTextResult;
+	public void setNumberOfPages(Integer numberOfPages) {
+		this.numberOfPages = numberOfPages;
 	}
 
-	public GetDocumentAnalysisRequest getAnalyzingTextResult() {
-		return analyzingTextResult;
+	public List<TextractResults> getTextractResults() {
+		return textractResults;
 	}
 
-	public void setAnalyzingTextResult(GetDocumentAnalysisRequest analyzingTextResult) {
-		this.analyzingTextResult = analyzingTextResult;
+	public void setTextractResults(List<TextractResults> textractResults) {
+		this.textractResults = textractResults;
 	}
 
 	public String getFileName() {
@@ -52,30 +50,6 @@ public class DocumentDomain extends BaseDomain {
 		this.fileSize = fileSize;
 	}
 
-	public FileStorageType getStorage() {
-		return storage;
-	}
-
-	public void setStorage(FileStorageType storage) {
-		this.storage = storage;
-	}
-
-	public String getMd5SumInternal() {
-		return md5SumInternal;
-	}
-
-	public void setMd5SumInternal(String md5SumInternal) {
-		this.md5SumInternal = md5SumInternal;
-	}
-
-	public String getMd5SumExternal() {
-		return md5SumExternal;
-	}
-
-	public void setMd5SumExternal(String md5SumExternal) {
-		this.md5SumExternal = md5SumExternal;
-	}
-
 	public String getContentType() {
 		return contentType;
 	}
@@ -84,26 +58,28 @@ public class DocumentDomain extends BaseDomain {
 		this.contentType = contentType;
 	}
 
-	public String getS3Name() {
-		return s3Name;
+	public String getFileId() {
+		return fileId;
 	}
 
-	public void setS3Name(String s3Name) {
-		this.s3Name = s3Name;
+	public void setFileId(String fileId) {
+		this.fileId = fileId;
 	}
 
-	public String getS3Bucket() {
-		return s3Bucket;
+	public FileStorageType getStorage() {
+		return storage;
 	}
 
-	public void setS3Bucket(String s3Bucket) {
-		this.s3Bucket = s3Bucket;
+	public void setStorage(FileStorageType storage) {
+		this.storage = storage;
 	}
 
-	@Override
-	public String toString() {
-		return "DocumentDomain [fileName=" + fileName + ", fileSize=" + fileSize + ", contentType=" + contentType + ", s3Name=" + s3Name + ", s3Bucket="
-				+ s3Bucket + ", storage=" + storage + ", md5SumInternal=" + md5SumInternal + ", md5SumExternal=" + md5SumExternal + "]";
+	public String getMd5() {
+		return md5;
+	}
+
+	public void setMd5(String md5) {
+		this.md5 = md5;
 	}
 
 }

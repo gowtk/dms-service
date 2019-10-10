@@ -20,6 +20,17 @@ public class ListView<T> {
 		super();
 	}
 
+	public ListView(LinkedHashMap<String, String> columns, List<String> sort) {
+		super();
+		this.contents = null;
+		this.totalElements = 0;
+		this.page = -1;
+		this.size = -1;
+		this.totalPages = -1;
+		this.columns = columns;
+		this.sort = sort;
+	}
+
 	public ListView(List<T> contents, long totalElements, Pageable pageable, LinkedHashMap<String, String> columns, List<String> sort) {
 		super();
 		this.contents = contents;

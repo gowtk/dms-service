@@ -34,8 +34,8 @@ public class DocumentRepository {
 		return operations.save(document).getId().toString();
 	}
 
-	public DocumentDomain findByMd5SumInternal(String md5Sum) {
-		Query query = Query.query(Criteria.where(RepositoryConstants.DOCUMENT_MD5SUM_INTERNAL).is(md5Sum));
+	public DocumentDomain findByMd5(String md5) {
+		Query query = Query.query(Criteria.where(RepositoryConstants.DOCUMENT_MD5).is(md5));
 		return operations.findOne(query, DocumentDomain.class);
 	}
 
@@ -44,22 +44,19 @@ public class DocumentRepository {
 		return operations.find(query, DocumentDomain.class);
 	}
 
-	public void updateS3Details(DocumentDomain document) {
+	public void updateGridFsDetails(DocumentDomain document) {
 		Query query = RepositoryUtils.queryForMongoId(document.getId());
 		Update update = new Update();
-		update.set(RepositoryConstants.DOCUMENT_S3_NAME, document.getS3Name());
-		update.set(RepositoryConstants.DOCUMENT_S3_BUCKET, document.getS3Bucket());
-		update.set(RepositoryConstants.DOCUMENT_MD5SUM_EXTERNAL, document.getMd5SumExternal());
+		update.set(RepositoryConstants.DOCUMENT_FILE_ID, document.getFileId());
 		operations.updateFirst(query, update, DocumentDomain.class);
 	}
 
 	public void updateTextractDetails(DocumentDomain document) {
 		Query query = RepositoryUtils.queryForMongoId(document.getId());
 		Update update = new Update();
-		update.set(RepositoryConstants.DOCUMENT_TEXTRACT_DETECT, document.getDetectingTextResult());
-		update.set(RepositoryConstants.DOCUMENT_TEXTRACT_ANALYSE, document.getAnalyzingTextResult());
+		update.set(RepositoryConstants.DOCUMENT_FILE_NO_OF_PAGES, document.getNumberOfPages());
+		update.set(RepositoryConstants.DOCUMENT_TEXTRACT_RESULTS, document.getTextractResults());
 		operations.updateFirst(query, update, DocumentDomain.class);
-
 	}
 
 }
